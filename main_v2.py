@@ -50,19 +50,15 @@ FONT = pygame.font.Font(None, 25)
 
 # Definimos la forma que puede tener cada figura con un array relacional para
 # poder dar un nombre a cada elemento de la array y no utilizar ínidices
-FIGURAS = {
+FIGURAS = {    
+    'C' : [[1, 2, 5, 6]],
     'I' : [[1, 5, 9, 13], [4, 5, 6, 7]],
-    'Z' : [[4, 5, 9, 10], [2, 6, 5, 9]],
-    'S' : [[6, 7, 9, 10], [1, 5, 6, 10]],
-    'L' : [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
-    'J' : [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
-    'T' : [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
-    'O' : [[1, 2, 5, 6]]
+    'T' : [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]]
 }
 
 # Definimos los tipos de figuras en una array para poder acceder a la forma 
 # de la figura en el array relacional
-TIPO = ['I', 'Z', 'S', 'L', 'J', 'T', 'O']
+TIPO = ['C', 'I', 'T']
 
 # Objetos que definen el juego del tetris:
 # Esta clase va a determinar las formas de las figuras, sus rotaciones.
@@ -94,7 +90,7 @@ class Tetris:
         self.filas = filas
         self.columnas = columnas
         self.tablero = self.tablero_modelo()
-        self.figura = Figura(5, 0)
+        self.figura = Figura(4, 0)
         self.perdido = False
 
     # Genera el tablero interno del tetris, por lo que se generará una matriz, siendo las 
@@ -120,7 +116,7 @@ class Tetris:
     # Método que cambia la figura activa del tablero por una nueva figura, creando un nuevo objeto
     # figura, el cual internamente devuelve una forma de figura aleatoria nada más instanciarse
     def nueva_figura(self):
-        self.figura = Figura(5, 0)
+        self.figura = Figura(4, 0)
 
     # Método en el que se comprueba si la figura activa se ha chocado con los límites de la pantalla
     # o con otra figura.
@@ -242,15 +238,13 @@ class Tetris:
         giro = self.figura.giro
         self.figura.girar()
         if self.se_choca():
-            self.figura.girar = giro
+            self.figura.giro = giro
 
 # Aquí se define el bucle principal que correrá el juego y se escucharán los eventos efectuados
 # por el usuario, respondiendo con el modelo creado anteriormente y determinando el refresco del
 # juego.
 # Variables iniciales antes de empezar el juego
 contador = 0
-moverse_hacia_abajo = False
-poder_moverse = True
 
 # Se define el tablero en el modelo
 tetris = Tetris(FILAS, COLUMNAS)
@@ -261,18 +255,16 @@ while run:
     # Pinta la venta de negro para poder simular los FPS.
     ventana.fill(NEGRO)
 
-    # Por cada 10000 ciclos de while el contador se pondrá a `0`, de esta forma podremos luego controlar de manera más efectiva los FPS
+    # Por cada 10 ciclos de while el contador se pondrá a `0`, de esta forma podremos luego controlar de manera más efectiva los FPS
     # y la animación de bajar la figura sea mucho más fluida.
     contador += 1
-    if contador >= 10000:
+    if contador >= 10:
         contador = 0
 
-    # Mientras no pause el juego la pieza bajará automáticamente, o si `moverse_hacia_abajo` está a `True`, se volverá a ejecutar el método 
-    # para bajar la pieza, por lo que bajará más rápido.
-    if poder_moverse:
-        if contador % FPS == 0 or moverse_hacia_abajo:
-            if tetris.perdido is False:
-                tetris.ir_abajo()
+    # Cuadno el módulo del contador entre los FPS de `0` entonces bajará la pieza.
+    if contador % FPS == 0:
+        if tetris.perdido is False:
+            tetris.ir_abajo()
 
     # Comprobamos si se ha efectuado alguno de los eventos.
     for event in pygame.event.get():
@@ -281,8 +273,8 @@ while run:
             run = False
         # Evento que escucha la tecla que pulsa el usuairo.
         if event.type == pygame.KEYDOWN:
-            # Si no se ha pausado el juego y no se ha perdido se podrá mover la figura activa.
-            if poder_moverse and not tetris.perdido:
+            # Si no se ha perdido se podrá mover la figura activa.
+            if tetris.perdido is False:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     # Mover la figura activa hacia la izquierda.
                     tetris.ir_a_un_lado(-1)
@@ -295,10 +287,6 @@ while run:
                     # Girar la figura activa.
                     tetris.girar()
 
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    # Al ponerse a `True` la figura activa bajaría más rápido.
-                    moverse_hacia_abajo = True
-
                 if event.key == pygame.K_SPACE:
                     # Mover la figura activa instantáneamente a su posición inferior.
                     tetris.ir_rapido_abajo()
@@ -307,21 +295,12 @@ while run:
                 # Este evento reiniciará el juego y el tetris empezará de nuevo.
                 tetris.__init__(FILAS, COLUMNAS)
 
-            if event.key == pygame.K_p:
-                # Este evento pausará el juego y el tetris se quedará en pausa hasta que se vuelva a pulsar la tecla `p`.
-                poder_moverse = not poder_moverse
-
             if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
                 # Este evento escucha si el usuairo ha pulsado la tecla `esc` para salir del juego.
                 run = False
 
-        # Este evento se hace de esta forma para que mientras que la tecla 'KEYDOWN' o `s` sea mantenida la figura activa baje más rápido.
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                moverse_hacia_abajo = False
-
     # Método que dibuja la cuadrícula del tablero en la vista de forma gráfica.
-    tetris.dibujar_celdas()
+    #tetris.dibujar_celdas()
 
     # En estos bucles que están anidados se recorrerá la matriz que conforma el tablero en el modelo, para ir leyendo cada celda, si el valor de la celda
     # es diferente de `0`, quiere decir que la celda no está vacía, por lo que se rellenará en la ventana gráfica esa posición con un cuadrado con la imagen 
@@ -333,8 +312,8 @@ while run:
                 # Si no está vacía, cogemos el valor de la celda y sacamos la imagen asociada a ese color gracias al array relacional definida al inicio del programa.
                 ventana.blit(SQ_FIGURA[tetris.tablero[x][y]], (y * TAM_CELDA, x * TAM_CELDA))
                 # Dibujamos un cuadrado detrás de la imagen para que se vea con un borde la imagen y se vea la figura mucho más definida.
-                pygame.draw.rect(ventana, BLANCO, (y * TAM_CELDA, x * TAM_CELDA, TAM_CELDA, TAM_CELDA), 1)
-
+                pygame.draw.rect(ventana, NEGRO, (y * TAM_CELDA, x * TAM_CELDA, TAM_CELDA, TAM_CELDA), 1)
+    
     # Esta parte de código se ejecutará mientras la figura está moviendose, es decir mientras no colisione ni con el final del tablero ni con otra figura,
     # sin embargo el anterior, redibuja todo el tiempo las figuras colocadas anteriormente, pero esta parte solo dibuja la figura activa.
     if tetris.figura is not None:
@@ -349,18 +328,17 @@ while run:
                     # Cogemos el valor de la celda y sacamos la imagen asociada a ese color gracias al array relacional definida al inicio del programa.
                     ventana.blit(SQ_FIGURA[tetris.figura.color], (x, y))
                     # Dibujamos un cuadrado detrás de la imagen para que se vea con un borde la imagen y se vea la figura mucho más definida.
-                    pygame.draw.rect(ventana, BLANCO, (x, y, TAM_CELDA, TAM_CELDA), 1)
+                    pygame.draw.rect(ventana, NEGRO, (x, y, TAM_CELDA, TAM_CELDA), 1)
 
     # Si ha perdido porque la figura activa ha colisionado con la parte superior del tablero se ejecutará esta parte de código porque 
     # habrá perdido.
     if tetris.perdido:
         menu_bkg = pygame.Rect((0, 0, WIDTH, HEIGHT))
         pygame.draw.rect(ventana, NEGRO, menu_bkg)
-        pygame.draw.rect(ventana, ROJO, menu_bkg, 2)
 
         titulo = FONT.render('Has perdido :C', True, BLANCO)
-        mensaje1 = FONT.render('Pulsa `R` para volver a jugar', True, ROJO)
-        mensaje2 = FONT.render('Press `Q` para cerrar el juego', True, ROJO)
+        mensaje1 = FONT.render('Pulsa `R` repetir', True, ROJO)
+        mensaje2 = FONT.render('Press `Q` cerrar', True, ROJO)
 
         ventana.blit(titulo, (menu_bkg.centerx - titulo.get_width() / 2, menu_bkg.y + 20))
         ventana.blit(mensaje1, (menu_bkg.centerx - mensaje1.get_width() / 2, menu_bkg.y + 80))
