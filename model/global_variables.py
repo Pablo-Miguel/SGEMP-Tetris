@@ -1,9 +1,6 @@
 import pygame
 import math
 
-# Inicilización de Pygame
-pygame.init()
-
 # Inicialización de la superficie de dibujo
 WIDTH = 300
 HEIGHT = 600
@@ -23,25 +20,25 @@ ROJO = (252, 91, 122)
 BLANCO = (255, 255, 255)
 
 # Defino las imágenes que va a tener mi tetris
-sq_1 = pygame.image.load('./assets/imgs/sq_1_v2.jpg')
+sq_1 = pygame.image.load('./assets/imgs/sq_1.jpg')
 sq_1 = pygame.transform.scale(sq_1, (TAM_CELDA, TAM_CELDA))
 
-sq_2 = pygame.image.load('./assets/imgs/sq_2_v2.jpg')
+sq_2 = pygame.image.load('./assets/imgs/sq_2.jpg')
 sq_2 = pygame.transform.scale(sq_2, (TAM_CELDA, TAM_CELDA))
 
-sq_3 = pygame.image.load('./assets/imgs/sq_3_v2.jpg')
+sq_3 = pygame.image.load('./assets/imgs/sq_3.jpg')
 sq_3 = pygame.transform.scale(sq_3, (TAM_CELDA, TAM_CELDA))
 
-sq_4 = pygame.image.load('./assets/imgs/sq_4_v2.jpg')
+sq_4 = pygame.image.load('./assets/imgs/sq_4.jpg')
 sq_4 = pygame.transform.scale(sq_4, (TAM_CELDA, TAM_CELDA))
 
-sq_5 = pygame.image.load('./assets/imgs/sq_5_v2.jpg')
+sq_5 = pygame.image.load('./assets/imgs/sq_5.jpg')
 sq_5 = pygame.transform.scale(sq_5, (TAM_CELDA, TAM_CELDA))
 
-sq_6 = pygame.image.load('./assets/imgs/sq_6_v2.jpg')
+sq_6 = pygame.image.load('./assets/imgs/sq_6.jpg')
 sq_6 = pygame.transform.scale(sq_6, (TAM_CELDA, TAM_CELDA))
 
-sq_7 = pygame.image.load('./assets/imgs/sq_7_v2.jpg')
+sq_7 = pygame.image.load('./assets/imgs/sq_7.jpg')
 sq_7 = pygame.transform.scale(sq_7, (TAM_CELDA, TAM_CELDA))
 
 # Imágenes definidas en un array relacional, por lo que sus
@@ -55,9 +52,6 @@ SQ_FIGURA = {
     6: sq_6,
     7: sq_7
 }
-
-# Fuentes que tendrá mi programa
-FONT = pygame.font.Font(None, 25)
 
 # Definimos la forma que puede tener cada figura con un array relacional para
 # poder dar un nombre a cada elemento de la array y no utilizar ínidices

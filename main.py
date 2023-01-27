@@ -3,6 +3,12 @@ from model.figura import *
 from model.tetris import *
 import pygame
 
+# Inicilización de Pygame
+pygame.init()
+
+# Fuentes que tendrá mi programa
+FONT = pygame.font.Font(None, 25)
+
 # Se le da nombre a la ventana
 pygame.display.set_caption("Teris")
 
