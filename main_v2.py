@@ -6,11 +6,11 @@ import math
 pygame.init()
 
 # Inicialización de la superficie de dibujo
-WIDTH = 200
-HEIGHT = 400
+WIDTH = 300
+HEIGHT = 600
 ventana = pygame.display.set_mode((WIDTH, HEIGHT))
 
-TAM_CELDA = 20
+TAM_CELDA = 30
 FILAS = math.floor(HEIGHT / TAM_CELDA)
 COLUMNAS = math.floor(WIDTH / TAM_CELDA)
 
@@ -19,7 +19,7 @@ FPS = 24
 
 # Defino los colores que tendrá mi programa
 NEGRO = (0, 0, 0)
-AZUL = (31, 25, 76)
+GRIS = (58, 58, 58)
 ROJO = (252, 91, 122)
 BLANCO = (255, 255, 255)
 
@@ -90,7 +90,7 @@ class Tetris:
         self.filas = filas
         self.columnas = columnas
         self.tablero = self.tablero_modelo()
-        self.figura = Figura(4, 0)
+        self.figura = Figura(3, 0)
         self.perdido = False
 
     # Genera el tablero interno del tetris, por lo que se generará una matriz, siendo las 
@@ -109,14 +109,14 @@ class Tetris:
     # filas y columnas
     def dibujar_celdas(self):
         for i in range(self.filas + 1):
-            pygame.draw.line(ventana, BLANCO, (0, TAM_CELDA * i), (WIDTH, TAM_CELDA * i))
+            pygame.draw.line(ventana, GRIS, (0, TAM_CELDA * i), (WIDTH, TAM_CELDA * i))
         for j in range(self.columnas + 1):
-            pygame.draw.line(ventana, BLANCO, (TAM_CELDA * j, 0), (TAM_CELDA * j, HEIGHT))
+            pygame.draw.line(ventana, GRIS, (TAM_CELDA * j, 0), (TAM_CELDA * j, HEIGHT))
 
     # Método que cambia la figura activa del tablero por una nueva figura, creando un nuevo objeto
     # figura, el cual internamente devuelve una forma de figura aleatoria nada más instanciarse
     def nueva_figura(self):
-        self.figura = Figura(4, 0)
+        self.figura = Figura(3, 0)
 
     # Método en el que se comprueba si la figura activa se ha chocado con los límites de la pantalla
     # o con otra figura.
@@ -300,7 +300,7 @@ while run:
                 run = False
 
     # Método que dibuja la cuadrícula del tablero en la vista de forma gráfica.
-    #tetris.dibujar_celdas()
+    tetris.dibujar_celdas()
 
     # En estos bucles que están anidados se recorrerá la matriz que conforma el tablero en el modelo, para ir leyendo cada celda, si el valor de la celda
     # es diferente de `0`, quiere decir que la celda no está vacía, por lo que se rellenará en la ventana gráfica esa posición con un cuadrado con la imagen 
